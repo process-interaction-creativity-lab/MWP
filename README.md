@@ -5,7 +5,7 @@
 This repo contains the source code for the Modular Word Processor -- a malleable software environment 
 for writers. Writers using the MWP can combine, share, and create custom tools and extensions called 
 "modules." Combining, sharing, and using modules requires no generative AI components; for creating new 
-modules, the system uses generative UI to turn natural language instructions into working code without 
+modules, the system uses generative AI to turn natural language instructions into working code without 
 requiring any programming experience.
 
 https://github.com/user-attachments/assets/fac330de-1135-48aa-966f-beed8479c035
