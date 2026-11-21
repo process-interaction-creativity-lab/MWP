@@ -1,0 +1,96 @@
+node_modules/
+dist/
+out/
+build/
+release/
+
+# Generated vendor bundles (built by packages/shell-renderer/tooling/build-vendor.ts).
+packages/shell-renderer/.vendor/
+
+# Module bundles + index.json for the web host, built by its `modules` script
+# (apps/shell build:static-modules). Vite serves public/ in dev and copies it
+# into dist/.
+apps/web/public/
+
+*.log
+*.log.*
+npm-debug.log*
+pnpm-debug.log*
+
+# Agent-harness session transcripts (apps/cli). Local run artifacts: one
+# directory per session, and they grow without bound. Copy one out if it is
+# worth keeping.
+.mwps-agent/
+
+.vite/
+.cache/
+coverage/
+.nyc_output/
+
+# playwright-electron run artifacts (traces, screenshots, HTML report). Traces
+# are retained on failure only, but they are large and per-run.
+test-results/
+playwright-report/
+
+.DS_Store
+Thumbs.db
+
+.env
+.env.*
+!.env.example
+.mwps-bench.env
+
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# transient agent worktrees; shared skills live in .claude/skills/
+.claude/worktrees/
+
+# Benchmark run records are tracked: a score is only interpretable next to the
+# candidate that produced it and the transcript of how it got there, and those
+# are what let a later run be compared against an earlier one. Sandboxes are not
+# here to be ignored — they live under ~/.mwps-bench/work (sbx) or $TMPDIR.
+#
+# Exempt their logs from the blanket `*.log` above. grade-output.log is the raw
+# vitest + tsc text behind a Tier-1 score, and the container it came from is
+# destroyed straight after the run — dropping it leaves "9 of 24 failed" with no
+# way to tell a wrong module from a mis-run grader.
+!benchmark/runs/**/*.log
+# Claude Code's local state. `settings.local.json` is the personal-overrides
+# file by convention (the shared one is `settings.json`, which is not ignored),
+# and `worktrees/` holds whole checkouts — node_modules and all.
+.claude/settings.local.json
+.claude/worktrees/
+.claude/memories/
+
+# pnpm content-addressable store, created by in-repo installs
+.pnpm-store/
+__pycache__/
+benchmark/analysis/figures/
+benchmark/analysis/tables/
+
+# Third-party source checked out for reading (agents cannot read node_modules,
+# which links into the pnpm store). Not built or imported.
+.reference/
+
+# memory measurements (scripts/measure-memory.ts)
+scripts/.memory/
+
+# Papers for new modules: read from here, not committed (more-papers/README.md)
+docs/work/module-framework/more-papers/*.pdf
+
+# Lumen gateway key for model comparisons; never committed
+.lumen.env
+
+# Drafts from other models, for comparison (scripts/draft-with-model.ts)
+.bakeoff/
+
+# Session screenshots, kept locally (docs/work/mvp/README.md).
+docs/work/mvp/screenshots/
+
+# Benchmark v2: the runner's grading worktree and Docker build contexts
+benchmark/v2/.grade/
+benchmark/v2/.build/

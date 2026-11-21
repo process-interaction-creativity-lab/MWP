@@ -1,0 +1,19 @@
+# glas-columns: description
+
+Shows two columns: your text on the left and private notes on the right, each level with the paragraph it comments on. A paragraph can have any number of notes.
+
+For a writer who works with a running commentary beside the main text: a draft with marginal thoughts, a text with a gloss, a translation with notes, in the manner of Derrida's *Glas*.
+
+**Kind:** extension. It lays out one ordinary editor's paragraphs in two columns; it is not a second editor or a copy.
+
+- **One editor.** Cursor, selection, undo, copy and paste, the toolbar and every other module work as usual.
+- **Notes.** A paragraph's notes are one block of their own, right after the paragraph: a group of note paragraphs shown in the right column level with the paragraph's first row. A paragraph with a tall group of notes stretches over as many rows as it needs, so the columns stay aligned. Notes are slightly smaller and greyer than the text. Paragraphs inside lists and quotes sit in the left column and can't have notes.
+- **Adding.** An "add note" control beside each paragraph, and an action in the palette that adds a note to the paragraph at the caret, add a blank note at the end of that paragraph's notes (making the group if there is none) and put the caret in it. Adding is one undoable step.
+- **Typing in notes.** The group is closed at both ends. Enter inside it starts another note in the same group and never leaves it; Backspace at the start of the first note and Delete at the end of the last do nothing. Backspace at the start of the paragraph after a group, or Delete at the end of the paragraph before one, first selects the whole group; pressing again deletes it. A selection that crosses a group and is deleted removes the group with it.
+- **Moving and deleting.** Notes belong to the paragraph they follow. Moving a paragraph, by a drag or by a card in cards-view, moves its notes with it, and one undo puts both back; this holds on a pane where glas-columns is placed, and an edit made in a pane without it moves only the paragraph. Cut and paste is two edits, so select the paragraph and its notes together to carry both. Deleting the paragraph's text leaves the notes in place, under whatever comes before them.
+- **Groups side by side.** If two groups of notes end up next to each other (the paragraph between them was deleted, or an edit in a pane without the module), they are drawn as one group, with no gap between them, level with the block before them. Arrow keys cross from one to the other as inside one group, and "add note" adds to the last of them.
+- **Arrow keys follow the columns.** Down at the end of a paragraph goes to the next paragraph, not into its notes; down at the end of a group of notes goes to the next group (of notes beside it, if there is one); Up does the reverse. Inside a wrapped paragraph, inside a group, and inside lists and quotes, arrows behave as normal. Left and Right still cross between columns in document order.
+- **Layout.** The two columns sit on the normal page with a faint rule between them; the page is wide enough that neither is newspaper-narrow. On a narrow pane, notes show under their paragraph with a rule at the left, and both stay reachable and readable.
+- **Data.** Notes are ordinary paragraphs in the file, in a block after their paragraph; they show in every pane on the document. Other modules that read the text, such as counters, read notes as body text.
+- **Two panes on one document.** Edits in either appear in both; the pane with the module shows the columns.
+- **Module off.** A group of notes shows as an opaque placeholder block, and its text is kept untouched in the file; turning the module on restores the notes and the columns. A document never opened with the module is all text, with no notes.

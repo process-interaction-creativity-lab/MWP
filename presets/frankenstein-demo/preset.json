@@ -1,0 +1,29 @@
+{
+  "modules": [
+    "cards-view",
+    "word-processor",
+    "topic-sentence-highlighting",
+    "resizable-split",
+    "hemingway-pen",
+    "poet-critique",
+    "sentence-cycler"
+  ],
+  "project": "Welcome",
+  "documents": [
+    { "name": "Tutorial", "file": "tutorial.md" },
+    { "name": "Frankenstein", "file": "frankenstein.md" }
+  ],
+  "layout": {
+    "document": "tutorial",
+    "modules": ["resizable-split"],
+    "values": { "resizable-split": { "orientation": "horizontal" } },
+    "children": [
+      { "document": "tutorial", "modules": ["word-processor"] },
+      {
+        "document": "tutorial",
+        "modules": ["word-processor", "cards-view"],
+        "values": { "cards-view": { "on": true } }
+      }
+    ]
+  }
+}

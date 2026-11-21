@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "types": ["node", "vite/client"],
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "mwps": ["./src/api/mwps.d.ts"],
+      "mwps/ui": ["./src/ui/index.ts"],
+      "mwps/icons": ["./src/ui/icons.ts"],
+      "mwps/text": ["./src/lib/text.ts"],
+      "mwps/changes": ["./src/lib/changes.ts"],
+      "mwps/ai": ["./src/lib/ai.ts"],
+      "mwps/react": ["./src/api/react.d.ts"],
+      "@/ui/*": ["./src/ui/*"]
+    }
+  },
+  "include": ["src", "modules", "tests", "e2e", "scripts", "*.config.ts"]
+}

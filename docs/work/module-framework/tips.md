@@ -1,0 +1,9 @@
+# Tips: ProseMirror and browser facts
+
+One fact per line, each one a module tripped on and had to work out by trial. They are ProseMirror's or the browser's, not mwps's: how mwps works is in the [guide](12-authoring-guide.md). Grep here before working something out by hand (`grep -i drag docs/work/module-framework/tips.md`). Add a line when you find one; keep it to the fact and its fix.
+
+- **Widget marks:** a widget inside marked text is drawn inside those marks (bold text makes its buttons bold, a link makes it a link) unless its spec says `marks: []`. Give that to any widget that isn't part of the words.
+- **Mod-click:** Mod-click on text (Cmd on a Mac, Ctrl elsewhere) is ProseMirror's "select the node", so it selects the whole paragraph. A module that gives Mod-click its own meaning takes it in a pane plugin's `handleClick` and returns `true`.
+- **Drag out of the pane:** dragged text carries `text/plain` and `text/html`, so any drop target can read it. To know which words it was, note the selection in a pane plugin's `handleDOMEvents.dragstart`, and forget it in `dragend`, which fires after the drop. The text stays where it was: ProseMirror moves dragged text only within one editor. A target that is a ProseMirror editor of your own takes the drop in `handleDrop` and returns `true`.
+- **Selection right after focus:** ProseMirror redraws its own selection in a short timeout after the editor takes focus, so a DOM selection set just after focusing the editor (from a field of the module's own) can be overwritten. Wait for `ProseMirror-focused` and a beat before setting it.
+- **Double-click and mouseup:** a double-click fires two `mouseup`s over the same selection. A module that acts on the selection at mouseup acts twice unless it ignores a second one over an unchanged selection and document.

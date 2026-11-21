@@ -1,0 +1,12 @@
+# QA: deleted-words-printer
+
+About five minutes. A Phomemo T02 and a Bluetooth-capable browser are ideal. Without them, steps 2 to 4 can still be checked on the toolbar and by looking at whatever the module shows for the batch and total, and the printing steps are skipped. Set the batch size to 3 for the check.
+
+1. Look at the toolbar. Confirm there is a connect button and a batch size field showing the current value. Type 0, 500 and letters into the field and confirm the value ends up between 1 and 200 and never becomes invalid. Set it to 3.
+2. With no printer connected, in a document with plenty of words, delete a whole word by selecting it. Then delete another whole word in one go with Backspace (select it first, or use the word-wise Backspace of your system). Backspace through a third word one letter at a time and confirm that counts nothing. Delete only the end of a word ("llo" of "hello"). Delete one letter. Confirm only the two whole words count towards the batch and nothing errors anywhere.
+3. Select and delete three words at once, including one next to a comma or full stop. Confirm each counts, without the punctuation. Delete the last word of one paragraph and the first word of the next, and confirm they count as two words, not one.
+4. Delete a word, undo, redo. Confirm undo and redo do not add to the count. Delete the same word again after undoing and confirm it counts again. Open a second pane on the same document, delete a word in it, and confirm it counts once, not twice.
+5. Press connect, pick the printer in the chooser, and confirm the button changes to disconnect. Cancel the chooser once beforehand and confirm the module stays usable and says why it did not connect. Delete enough words to fill the batch and confirm one sticker prints with a heading, the words, and a footer showing batch size and lifetime total.
+6. Delete a whole page of text at once. Confirm one sticker prints with no more than 40 words, and the footer total reflects every deleted word. Delete a word while it is printing and confirm it appears on the next sticker.
+7. Disconnect the printer, delete enough words to fill the batch, and confirm nothing is lost or errors. Reconnect and confirm the full batch prints at once.
+8. Turn the module off and on. Confirm the printer is disconnected after off, the toolbar controls go and return, the batch size and lifetime total are remembered, and the document was never changed by any step.

@@ -1,0 +1,12 @@
+# QA: margin-notes
+
+About five minutes. Use a window wide enough for the page margin, and a document with a few paragraphs.
+
+1. Select a few words and confirm an "add note" control appears near the selection, and not for a caret alone or a selection of only spaces. Use it. Confirm the words are highlighted, an empty note appears in the right margin level with that line with the caret inside it, and the card sits in the margin, not over the prose.
+2. Type a note body, then click into a different paragraph of the text (the body is written to the document when the note loses focus). Confirm the first click puts the caret where you clicked, so what you type next lands there and the noted words are untouched. Add a second note on the next line and a third on the same line as the second. Confirm no two cards overlap and their order matches the text. Click into each note in turn: its card and its highlight take the same stronger tint, and it clears when the caret leaves. Scroll and resize; confirm cards follow the text.
+3. Select text across two paragraphs and add a note. Press Enter in the middle of the highlighted text. Confirm both halves stay highlighted and the card stays attached to the first.
+4. Type a note body and click into the text, then undo once: the whole body goes in one step (the card stays, empty); undo again removes highlight and card together, and redo brings both back. Delete a note with the control on its card and confirm its highlight goes too; undo brings both back with the body intact.
+5. Delete the highlighted text with the keyboard. Confirm the note goes with it, and undo restores text, highlight and body together.
+6. Copy highlighted text that has a note and paste it elsewhere. Confirm the copy has its own note with the same body, and editing one does not change the other.
+7. Open a second pane on the same document and confirm the notes show there. Hide margin notes in one pane with the toggle: that pane loses cards, highlights and the extra margin while the other keeps them. Edit a note in one pane and click into the text: the other pane shows the new body. Reload and confirm each pane's choice held.
+8. Turn the module off and on. Confirm nothing of the notes shows while it is off, and that they come back after. Narrow the window (or open a split so the pane is narrow) and confirm the pane scrolls sideways to the cards, with the text still at the left of the view.

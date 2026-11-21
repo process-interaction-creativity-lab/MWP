@@ -1,0 +1,12 @@
+# QA: alt-takes
+
+About five minutes. Start with a document of three paragraphs, with some bold text in the first.
+
+1. Select a few words in one paragraph. Confirm a "mark alternatives" control appears near the selection. Select only spaces and confirm nothing is offered. Mark the words. Confirm the span shows a dotted underline (no alternatives yet) and that no strip is shown while the caret is elsewhere.
+2. Put the caret inside the marked span. Confirm a "+" card appears level with the span, beside the page and not covering any text. Add an alternative and confirm it appears as a card, the underline changes to the "has alternatives" look, and the prose is unchanged. Add three or four more, one with a line break (Shift+Enter) and one long enough to need trimming.
+3. Scroll sideways over the cards with the wheel or trackpad. Confirm the row scrolls and the page does not. Click a card. Confirm its text replaces the span, the old text takes its place in the row, the caret is still in the text, and the row has returned to its start.
+4. Press undo. Confirm the previous text returns and the cards are as before. Redo and confirm it swaps again. Delete a card and confirm it goes; confirm you cannot delete the live text and cannot end up with no version.
+5. Edit the live text in place by typing in the middle of it. Confirm the cards do not change and no copy of the old wording appears. Then retype the wording of an existing card into the span and confirm no duplicate card appears.
+6. Make an alternative that contains bold text, switch to it, and switch back. Confirm the formatting survives each way. Copy the marked span and paste it elsewhere. Confirm the alternatives come with it and the pasted span is its own independent mark. Select the span's text and delete it; confirm undo restores it with its alternatives. Confirm a selection across two paragraphs is not offered the control.
+7. Open a second pane on the same document. Move the caret into the span in each pane in turn and confirm the strip shows in the pane the caret is in, with the same cards, and that a switch in one pane appears in the other. Resize the window narrow and confirm the cards stay reachable by scrolling the pane sideways.
+8. Remove the mark with its remove control and confirm the live text stays and the tint goes. Turn the module off (the live text stays, plain), edit the span's text, and turn it on again. Confirm the span and cards are consistent (no stale or duplicated version). Close and reopen the document and confirm the alternatives are still there.

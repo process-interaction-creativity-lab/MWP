@@ -1,0 +1,1002 @@
+/* The app's chrome, on the kit's theme (kit.css); close to v1's look: a
+   light toolbar across the top, a white page on a grey desk. */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+/* No pinch zoom on a touchscreen (the page still scrolls); the keyboard's
+   zoom stays. */
+html {
+  touch-action: pan-x pan-y;
+}
+:root {
+  --mwps-caret: #2563eb;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mwps-caret: #93c5fd;
+  }
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.mwps-main {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* The tab row: the project's tab, then one per writer-owned pane. */
+.mwps-tabs {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  min-height: 38px;
+  padding: 6px 8px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: color-mix(in oklab, var(--muted), var(--foreground) 5%);
+  border-bottom: 1px solid var(--border);
+}
+.mwps-tab {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 220px;
+  height: 31px;
+  padding: 0 8px 0 10px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: none;
+  color: var(--muted-foreground);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.mwps-tab:hover,
+.mwps-tab[data-inside] {
+  background: color-mix(in oklab, var(--foreground) 5%, transparent);
+}
+.mwps-tab[data-inside] {
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--mwps-caret) 45%, transparent);
+}
+.mwps-tab > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mwps-tab > svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  opacity: 0.65;
+}
+.mwps-tab[data-state='active'],
+.mwps-tab[data-state='contains'] {
+  color: var(--foreground);
+}
+.mwps-tab[data-state='active'] {
+  height: 32px;
+  margin-bottom: -1px;
+  border-color: var(--border);
+  background: var(--muted);
+  font-weight: 500;
+}
+.mwps-tab[data-state='contains']::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--mwps-caret) 45%, transparent);
+}
+/* The project's tab looks like an app menu, set off by a rule. */
+.mwps-tab.mwps-project-tab {
+  align-self: center;
+  height: 28px;
+  margin-right: 8px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--foreground);
+  font-weight: 600;
+}
+.mwps-tab.mwps-project-tab::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: -5px;
+  bottom: 5px;
+  width: 1px;
+  background: var(--border);
+}
+.mwps-tab.mwps-project-tab > svg:first-child {
+  width: 14px;
+  height: 14px;
+}
+/* Hovering a pane's tab outlines the pane. */
+.mwps-pane-outline {
+  position: fixed;
+  z-index: 39;
+  pointer-events: none;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--mwps-caret) 55%, transparent);
+  background: color-mix(in oklab, var(--mwps-caret) 5%, transparent);
+}
+/* A document row's rename and delete, shown on hover. */
+.mwps-row-action {
+  opacity: 0;
+}
+[data-slot='command-item']:hover .mwps-row-action,
+[data-slot='command-item'][data-selected='true'] .mwps-row-action,
+.mwps-row-action:focus-visible {
+  opacity: 1;
+}
+
+/* The toolbar: module items, for the last focused pane, in one row. The
+   modules' frames scroll sideways between the host's own controls, with an
+   arrow at each end while there is more past it. */
+.mwps-toolbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 56px;
+  padding: 4px 8px;
+  background: var(--muted);
+  border-bottom: 1px solid var(--border);
+  /* The kit draws a pressed toggle and a hovered button in --accent, which
+     is the toolbar's own --muted: a step darker, so they show here. */
+  --accent: color-mix(in srgb, var(--foreground) 12%, var(--muted));
+}
+.mwps-toolbar-view {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  /* Room for the frames' names, which break their top edge. */
+  padding-top: 6px;
+}
+.mwps-toolbar-view::-webkit-scrollbar {
+  display: none;
+}
+.mwps-toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+}
+.mwps-toolbar-arrow {
+  flex: none;
+  width: 24px;
+  height: 42px;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.mwps-toolbar-arrow:focus-visible {
+  outline: 2px solid var(--ring);
+}
+.mwps-toolbar-items > .mwps-module-ui {
+  display: contents;
+}
+/* A module's items in a frame, its name breaking the top edge just past
+   the rounded corner; every frame the same height, and at least as wide
+   as the name. Frames fit inside the toolbar's row with the name in the
+   room above, so the toolbar's height never depends on which modules are
+   placed. Hidden when its items draw nothing. */
+.mwps-toolbar-group {
+  box-sizing: border-box;
+  height: 42px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 6px;
+  border: 1px solid color-mix(in srgb, var(--muted-foreground) 35%, transparent);
+  border-radius: 6px;
+}
+.mwps-toolbar-group:not(:has(.mwps-module-ui > *)) {
+  display: none;
+}
+.mwps-toolbar-label {
+  align-self: flex-start;
+  margin: -6px 0 0 2px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 12px;
+  white-space: nowrap;
+  color: var(--muted-foreground);
+  background: var(--muted);
+}
+.mwps-toolbar-items {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* The panes, and the side tabs at their right. */
+.mwps-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+.mwps-body > .mwps-slot {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.mwps-side {
+  flex: 0 0 auto;
+  display: flex;
+  min-height: 0;
+  border-left: 1px solid var(--border);
+  background: var(--background);
+}
+.mwps-side-edge {
+  flex: 0 0 5px;
+  margin-left: -3px;
+  cursor: col-resize;
+  touch-action: none;
+}
+.mwps-side-views {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.mwps-side-view {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.mwps-side-view > .mwps-module-ui {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+  padding: 10px 12px;
+}
+.mwps-side-divider {
+  flex: 0 0 5px;
+  cursor: row-resize;
+  touch-action: none;
+  border-top: 1px solid var(--border);
+}
+/* As wide empty as with a tab in it, so nothing shifts when one comes. */
+.mwps-side-tabs {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  min-width: 33px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 3px;
+  background: var(--muted);
+  border-left: 1px solid var(--border);
+}
+.mwps-side-tab {
+  writing-mode: vertical-rl;
+  padding: 10px 3px;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius) - 4px);
+  background: none;
+  color: var(--muted-foreground);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.mwps-side-tab[aria-pressed='true'] {
+  background: var(--background);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+/* The modal root: a box of no size at the window's corner, above the panes,
+   so a module's own fixed layer or dialog covers the window and nothing
+   takes room or clicks while it draws nothing. */
+.mwps-modals {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 50;
+}
+
+/* The desk scrolls; the page sits on it. */
+.mwps-desk {
+  --mwps-desk: color-mix(in oklab, var(--muted), var(--foreground) 4%);
+  position: relative;
+  /* Modules size margins to the pane with `@container mwps-pane (…)`. */
+  container: mwps-pane / inline-size;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 16px 80px;
+  background: var(--mwps-desk);
+}
+/* A layout's child pane: its own scrolling desk, inside the layout. */
+.mwps-child {
+  --mwps-desk: color-mix(in oklab, var(--muted), var(--foreground) 4%);
+  container: mwps-pane / inline-size;
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 12px 40px;
+  background: var(--mwps-desk);
+}
+.mwps-child .mwps-page {
+  --mwps-text-width: 648px;
+  --mwps-page-gutter: 36px;
+  margin-top: 8px;
+  padding-block: 32px;
+}
+.mwps-child .mwps-page .ProseMirror {
+  min-height: 40vh;
+}
+/* A pane drawn by its layout: the layout fills it. */
+.mwps-slot.mwps-laid-out {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+.mwps-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.mwps-layout > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* Positioned, so overlay content may place itself against the page.
+   The text keeps a readable width; modules widen the page beside it by
+   setting the margin variables on `:scope`, and may set the text width. */
+.mwps-page {
+  --mwps-text-width: 544px;
+  --mwps-margin-left: 0px;
+  --mwps-margin-right: 0px;
+  --mwps-page-gutter: 88px;
+  position: relative;
+  box-sizing: border-box;
+  /* The text's own width, squeezed to a narrow pane; a margin is never
+     squeezed, so a page wider than the pane makes the pane scroll sideways
+     and the text stays at the left of the view. */
+  width: calc(min(100%, var(--mwps-text-width) + 2 * var(--mwps-page-gutter)) + var(--mwps-margin-left) + var(--mwps-margin-right));
+  margin: 28px auto 0;
+  padding-block: 72px;
+  padding-inline: calc(var(--mwps-page-gutter) + var(--mwps-margin-left)) calc(var(--mwps-page-gutter) + var(--mwps-margin-right));
+  background: var(--background);
+  border: 1px solid color-mix(in oklab, var(--foreground) 5%, transparent);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.06),
+    0 8px 24px rgb(0 0 0 / 0.06);
+}
+@media (max-width: 720px) {
+  .mwps-page {
+    --mwps-text-width: 664px;
+    --mwps-page-gutter: 28px;
+    padding-block: 40px;
+  }
+}
+/* A card: a piece of its pane's editor, sized to its block. */
+.mwps-card {
+  position: relative;
+}
+.mwps-page .ProseMirror {
+  min-height: 70vh;
+}
+/* The pane's selection while no editor of it has focus (core/base-plugins.ts),
+   in a grey that reads on the page in light and dark. */
+.ProseMirror .mwps-inactive-selection {
+  background: color-mix(in oklab, var(--foreground) 16%, transparent);
+}
+/* Focus came back: the editor's own selection shows (the tint goes with the next transaction). */
+.ProseMirror-focused .mwps-inactive-selection {
+  background: none;
+}
+/* Beside a block a module added to the writing: an info mark (ⓘ) in the
+   page's left margin, level with the block's first line; hovering it names
+   the module. Placed against the editor (ProseMirror's element is
+   positioned), so a block drawn elsewhere (glas-columns' right column) has
+   its mark at the page's left, beside the paragraph it belongs to. */
+.ProseMirror .mwps-module-block-label {
+  position: absolute;
+  right: calc(100% + 10px);
+  margin-top: 0.4em;
+  font: 15px/1 system-ui, sans-serif;
+  color: var(--muted-foreground);
+  opacity: 0.7;
+  cursor: default;
+  user-select: none;
+}
+.ProseMirror .mwps-module-block-label::before {
+  content: '\24D8';
+}
+.ProseMirror .mwps-module-block-label:hover {
+  opacity: 1;
+}
+/* The tooltip: on hover, and for a moment after a refused key. */
+.ProseMirror .mwps-module-block-label:hover::after,
+.ProseMirror .mwps-module-block-label[data-mwps-refused]::after {
+  content: attr(data-mwps-tip);
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  padding: 4px 8px;
+  white-space: pre;
+  text-align: left;
+  font: 400 12px/1.4 system-ui, sans-serif;
+  color: var(--popover-foreground);
+  background: var(--popover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.12);
+  pointer-events: none;
+}
+.ProseMirror .mwps-module-block-label[data-mwps-refused]::after {
+  content: attr(data-mwps-refused);
+}
+.ProseMirror .mwps-module-block-label[data-mwps-refused] {
+  opacity: 1;
+  color: var(--foreground);
+}
+:is(.mwps-page, .mwps-card) .ProseMirror {
+  outline: none;
+  font-family: Georgia, 'Iowan Old Style', Cambria, serif;
+  font-size: 17px;
+  line-height: 1.7;
+  caret-color: var(--mwps-caret);
+}
+
+.mwps-selection-bubble {
+  position: fixed;
+  z-index: 20;
+  transform: translateY(calc(-100% - 6px));
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+}
+.mwps-selection-bubble-below {
+  transform: translateY(6px);
+}
+/* The bubble hides when every module's component renders nothing; the
+   toolbar stays, empty, as in v1. */
+.mwps-selection-bubble:not(:has(.mwps-module-ui > *)) {
+  display: none;
+}
+
+.mwps-empty {
+  text-align: center;
+  color: var(--muted-foreground);
+}
+/* The project is open in another tab (app.tsx): why it isn't shown, and a way to take it. */
+.mwps-away {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 520px;
+  margin: 15vh auto 0;
+  padding: 0 16px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+.mwps-notice {
+  max-width: 720px;
+  margin: 0 auto 12px;
+  padding: 8px 12px;
+  border-radius: calc(var(--radius) - 2px);
+  background: color-mix(in oklab, var(--destructive) 10%, var(--background));
+  color: var(--destructive);
+  font-size: 14px;
+}
+.mwps-error {
+  padding: 16px;
+  color: var(--destructive);
+}
+
+.mwps-toasts {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mwps-toast {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  font-size: 14px;
+}
+
+/* Placeholders for parts whose module isn't installed. */
+.mwps-unknown {
+  display: inline-block;
+  padding: 0 0.3em;
+  border: 1px dashed var(--muted-foreground);
+  border-radius: 4px;
+  color: var(--muted-foreground);
+}
+div.mwps-unknown {
+  display: block;
+  margin: 0.5em 0;
+}
+
+/* A missing module's block that holds blocks: its paragraphs show as writing. */
+div.mwps-unknown-container {
+  border-left: 1px solid var(--border);
+  padding-left: 0.5em;
+}
+
+.mwps-rename {
+  width: 100%;
+  height: 2rem;
+  padding: 0 8px;
+  border: 1px solid var(--ring);
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--background);
+  font-size: 14px;
+  outline: none;
+}
+
+/* Beside a tab's menu: the highlighted module's summary. */
+.mwps-module-summary {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 8px);
+  width: 16rem;
+  padding: 8px 12px;
+  background: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.mwps-module-summary[data-side='left'] {
+  left: auto;
+  right: calc(100% + 8px);
+}
+
+/* The Settings dialog: a default AI endpoint, then a row per module. */
+.mwps-settings {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.mwps-settings-heading {
+  margin: 4px 0 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.mwps-settings-fields {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.875rem;
+}
+.mwps-settings-module {
+  display: grid;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+.mwps-settings-name {
+  font-weight: 600;
+}
+.mwps-settings-line {
+  display: grid;
+  grid-template-columns: 5rem auto 1fr;
+  gap: 8px;
+  align-items: center;
+}
+.mwps-settings-own summary,
+.mwps-settings-hint,
+.mwps-settings-empty {
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+}
+.mwps-settings-own summary {
+  cursor: pointer;
+}
+.mwps-settings-extra textarea {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.75rem;
+}
+.mwps-settings-error {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: var(--destructive);
+}
+.mwps-settings-own .mwps-settings-fields {
+  margin-top: 8px;
+}
+
+/* AI activity: a dot on a tab while its modules have calls out, and the
+   last half minute's waveform at the top of its menu. */
+.mwps-ai-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mwps-ai-dot {
+    animation: mwps-ai-pulse 1.2s ease-in-out infinite;
+  }
+}
+@keyframes mwps-ai-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+.mwps-ai-trace {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted-foreground);
+}
+.mwps-ai-trace canvas {
+  display: block;
+  width: 96px;
+  height: 20px;
+}
+.mwps-ai-trace-label {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.mwps-ai-trace-outcome {
+  font-size: 12px;
+  color: var(--foreground);
+}
+.mwps-ai-trace-outcome[data-outcome='failed'] {
+  color: var(--destructive);
+}
+.mwps-ai-trace-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mwps-ai-trace-stop {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 4px;
+  color: var(--muted-foreground);
+}
+.mwps-ai-trace-stop:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+
+/* The toolbar's ? at its right end, and the help it opens. */
+.mwps-help-button {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+.mwps-help-button:hover {
+  background: var(--accent);
+}
+.mwps-help-button:focus-visible {
+  outline: 2px solid var(--ring);
+}
+.mwps-help.mwps-help {
+  max-width: min(860px, calc(100% - 2rem));
+  max-height: min(720px, calc(100vh - 4rem));
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.mwps-help-body {
+  display: flex;
+  gap: 16px;
+  min-height: 0;
+}
+.mwps-help-nav {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding-right: 8px;
+}
+.mwps-help-nav-item {
+  text-align: left;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--foreground);
+  font-size: 14px;
+  cursor: pointer;
+}
+.mwps-help-nav-item:hover {
+  background: var(--muted);
+}
+.mwps-help-nav-item[aria-current] {
+  background: var(--accent);
+  font-weight: 600;
+}
+.mwps-help-page {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  font-size: 14px;
+  line-height: 1.55;
+  outline: none;
+}
+.mwps-help-page h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+.mwps-help-page h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 16px 0 4px;
+}
+.mwps-help-page h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 12px 0 4px;
+}
+.mwps-help-page p {
+  margin: 0 0 8px;
+}
+.mwps-help-page ul,
+.mwps-help-page ol {
+  margin: 0 0 8px;
+  padding-left: 22px;
+}
+.mwps-help-page ul {
+  list-style: disc;
+}
+.mwps-help-page ol {
+  list-style: decimal;
+}
+.mwps-help-page li {
+  margin: 2px 0;
+}
+.mwps-help-page code,
+.mwps-help-page kbd {
+  font-family: ui-monospace, monospace;
+  font-size: 0.9em;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--muted);
+}
+.mwps-help-page a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.mwps-help-summary {
+  color: var(--muted-foreground);
+}
+.mwps-help-none {
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+.mwps-help-actions li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .mwps-help-body {
+    flex-direction: column;
+  }
+  .mwps-help-nav {
+    flex: none;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 6px;
+  }
+}
+/* In #root (index.html) until the modules load and the app draws. */
+.mwps-loading {
+  max-width: 560px;
+  margin: 15vh auto 0;
+  padding: 0 16px;
+  font: 15px/1.5 system-ui, sans-serif;
+  color: var(--muted-foreground);
+}
+/* The app can't go on (main.tsx): a message and a reload, not a blank page. */
+.mwps-crashed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 560px;
+  margin: 15vh auto 0;
+  padding: 0 16px;
+  font: 15px/1.5 system-ui, sans-serif;
+}
+.mwps-crashed button {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+}
+
+/* The module creator: a panel at the window's right edge, beside the side
+   tabs; a conversation above and the writer's message below. */
+.mwps-creator-button,
+.mwps-reset-button {
+  flex: none;
+  margin-top: 6px;
+}
+.mwps-creator {
+  flex: 0 0 380px;
+  max-width: 45vw;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-left: 1px solid var(--border);
+  background: var(--background);
+  font-size: 14px;
+}
+.mwps-creator-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.mwps-creator-head h2 {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.mwps-creator-log {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+}
+.mwps-creator-intro p {
+  margin: 0 0 10px;
+  color: var(--muted-foreground);
+}
+.mwps-creator-example {
+  display: block;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.mwps-creator-example:hover:not(:disabled) {
+  background: var(--accent);
+}
+.mwps-creator-writer {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: var(--muted);
+  white-space: pre-wrap;
+}
+.mwps-creator-agent {
+  white-space: pre-wrap;
+}
+.mwps-creator-step {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.mwps-creator-step > summary {
+  cursor: pointer;
+}
+.mwps-creator-step[data-failed] > summary {
+  color: var(--destructive);
+}
+.mwps-creator-step pre {
+  max-height: 240px;
+  overflow: auto;
+  margin: 4px 0 0;
+  padding: 8px;
+  border-radius: calc(var(--radius) - 4px);
+  background: var(--muted);
+  color: var(--foreground);
+  font-size: 11px;
+  white-space: pre-wrap;
+}
+.mwps-creator-error {
+  color: var(--destructive);
+}
+.mwps-creator-working {
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.mwps-creator-module,
+.mwps-creator-alert {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+}
+.mwps-creator-module > span,
+.mwps-creator-alert > span {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.mwps-creator-alert {
+  background: color-mix(in oklab, var(--destructive) 10%, var(--background));
+  color: var(--destructive);
+}
+.mwps-creator-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+}
+.mwps-creator-input p {
+  margin: 0;
+  align-self: stretch;
+  color: var(--muted-foreground);
+}
