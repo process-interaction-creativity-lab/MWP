@@ -8,7 +8,7 @@ for writers. Writers using the MWP can combine, share, and create custom tools a
 modules, the system uses generative UI to turn natural language instructions into working code without 
 requiring any programming experience.
 
-![MWPS Demo Video](./docs/MWPS.mp4)
+https://github.com/user-attachments/assets/fac330de-1135-48aa-966f-beed8479c035
 
 
 # Install Instructions
